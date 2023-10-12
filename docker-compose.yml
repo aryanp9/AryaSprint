@@ -1,0 +1,31 @@
+version: '3.9'
+services:
+  mysql:
+    image: mysql:latest
+    container_name: mysql_container3
+    environment:
+      MYSQL_DATABASE: arya_hms_db
+      MYSQL_USER: root
+      MYSQL_PASSWORD: 1234567890
+    ports:
+      - "3306:3306"
+    networks:
+      - ola_network
+
+  springboot:
+    build: .
+    container_name: hospital-management_app
+    ports:
+      - "9090:9090"
+    depends_on:
+      - mysql
+    networks:
+      - ola_network
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://arya-hms-db.crur85fhxixa.ap-southeast-1.rds.amazonaws.com:3306/arya_hms_db
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: 1234567890
+
+networks:
+  ola_network:
+    driver: bridge
